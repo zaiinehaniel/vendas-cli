@@ -178,6 +178,7 @@ Mês      Quantidade  Valor (R$)  Variação %
 - `Acum. %` vem do acumulado exato, por isso pode diferir em 0,01 da soma das `Part. %` arredondadas.
 - Período mostra `início`/`fim` quando não há filtro.
 - `null` (variação, CV, XYZ) aparece como `-`.
+- Sem vendas no período: só o cabeçalho (período e registros) e a linha `Nenhuma venda no período.`.
 
 **json**
 
