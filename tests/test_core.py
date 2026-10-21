@@ -163,6 +163,14 @@ def test_limites_exatos_da_abc() -> None:
     assert [c.classe for c in abc.values()] == ["A", "B", "C"]
 
 
+def test_abc_logo_abaixo_dos_limites() -> None:
+    abc = classificar_abc({"a": d("75"), "b": d("17"), "c": d("6"), "d": d("2")})
+
+    # b começa em 75% (< 80): A. c começa em 92% (< 95): B. d começa em 98%: C.
+    # Pega limites deslocados para baixo (ex.: 70 ou 90), que os exatos não pegam.
+    assert {nome: c.classe for nome, c in abc.items()} == {"a": "A", "b": "A", "c": "B", "d": "C"}
+
+
 def test_abc_ordena_por_valor_e_desempata_por_nome() -> None:
     abc = classificar_abc({"b": d("10"), "c": d("30"), "a": d("10")})
 
@@ -206,6 +214,12 @@ def test_xyz_limites_exatos() -> None:
     assert classificar_xyz([1, 3, 1, 3]) == (d("0.5"), "X")  # cv = 1 / 2
     assert classificar_xyz([0, 2, 0, 2]) == (d("1"), "Y")  # cv = 1 / 1
     assert classificar_xyz([0, 0, 3]).classe == "Z"  # cv ≈ 1,41
+
+
+def test_xyz_logo_acima_dos_limites() -> None:
+    # Pega limites deslocados para cima (ex.: 0,55 ou 1,05), que os exatos não pegam.
+    assert classificar_xyz([1, 3, 5, 6]).classe == "Y"  # cv ≈ 0,51
+    assert classificar_xyz([0, 0, 5, 6]).classe == "Z"  # cv ≈ 1,01
 
 
 @pytest.mark.parametrize("serie", [[], [5], [5, 3], [0, 0, 0]])
