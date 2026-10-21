@@ -248,6 +248,7 @@ def gerar_relatorio(
         produtos=tuple(produtos),
         valor_total=sum((produto.valor_total for produto in produtos), _ZERO),
         quantidade_total=sum(produto.quantidade for produto in produtos),
+        participacao_total=sum((produto.participacao for produto in produtos), _ZERO),
         mais_vendido=escolher_mais_vendido(produtos),
         curva_abc=resumir_abc(produtos),
         matriz_abc_xyz=montar_matriz(produtos),

@@ -242,12 +242,11 @@ def _secao_produtos(relatorio: Relatorio) -> str:
         ]
         for produto in relatorio.produtos
     ]
-    participacao_total = sum((produto.participacao for produto in relatorio.produtos), Decimal(0))
     rodape = [
         "Total",
         formatar_inteiro(relatorio.quantidade_total),
         formatar_decimal(relatorio.valor_total),
-        formatar_decimal(participacao_total),
+        formatar_decimal(relatorio.participacao_total),
         "",
         "",
     ]

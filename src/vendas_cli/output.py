@@ -154,12 +154,11 @@ def _tabela_produtos(relatorio: Relatorio) -> list[str]:
         ]
         for produto in relatorio.produtos
     ]
-    participacao_total = sum((produto.participacao for produto in relatorio.produtos), Decimal(0))
     total = [
         "TOTAL",
         formatar_inteiro(relatorio.quantidade_total),
         formatar_decimal(relatorio.valor_total),
-        formatar_decimal(participacao_total),
+        formatar_decimal(relatorio.participacao_total),
         "",
         "",
     ]

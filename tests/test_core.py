@@ -64,6 +64,7 @@ def test_filtro_sem_vendas_no_intervalo() -> None:
 def test_totais_do_exemplo(relatorio_exemplo: Relatorio) -> None:
     assert relatorio_exemplo.valor_total == d("23357.80")
     assert relatorio_exemplo.quantidade_total == 53
+    assert arredondar(relatorio_exemplo.participacao_total) == d("100.00")
     assert [p.produto for p in relatorio_exemplo.produtos] == ["Notebook", "Mouse", "Teclado"]
 
 
@@ -112,6 +113,7 @@ def test_lista_vazia() -> None:
     assert relatorio.produtos == ()
     assert relatorio.valor_total == 0
     assert relatorio.quantidade_total == 0
+    assert relatorio.participacao_total == 0
     assert relatorio.mais_vendido is None
     assert relatorio.vendas_por_mes == ()
     assert [(c.classe, c.produtos, c.valor_total) for c in relatorio.curva_abc] == [

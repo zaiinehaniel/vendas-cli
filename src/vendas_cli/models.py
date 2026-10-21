@@ -76,6 +76,7 @@ class Relatorio:
     produtos: tuple[ResumoProduto, ...]
     valor_total: Decimal
     quantidade_total: int
+    participacao_total: Decimal
     mais_vendido: ResumoProduto | None
     curva_abc: tuple[ResumoClasse, ...]
     matriz_abc_xyz: Mapping[ClasseABC, Mapping[ClasseXYZ, int]]

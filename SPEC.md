@@ -287,7 +287,7 @@ Modelos:
 - `ResumoProduto(produto, quantidade, valor_total, participacao, participacao_acumulada, classe_abc, preco_medio, preco_min, preco_max, cv: Decimal | None, classe_xyz: ClasseXYZ | None, mes_pico: str)`.
 - `ResumoClasse(classe: ClasseABC, produtos: int, valor_total: Decimal, participacao: Decimal)`.
 - `ResumoMes(mes: str, quantidade: int, valor_total: Decimal, variacao: Decimal | None)`.
-- `Relatorio` com `produtos`, `curva_abc: tuple[ResumoClasse, ...]`, `matriz_abc_xyz: Mapping[ClasseABC, Mapping[ClasseXYZ, int]]` e `vendas_por_mes: tuple[ResumoMes, ...]`, além dos campos do enunciado.
+- `Relatorio` com `produtos`, `quantidade_total`, `participacao_total` (soma exata das participações, usada na linha de total), `curva_abc: tuple[ResumoClasse, ...]`, `matriz_abc_xyz: Mapping[ClasseABC, Mapping[ClasseXYZ, int]]` e `vendas_por_mes: tuple[ResumoMes, ...]`, além dos campos do enunciado.
 
 Regras de desenho:
 - `normalizer` converte texto em tipo e levanta `ValueError` com mensagem pronta para log; não conhece CSV nem regra de negócio. `parser` aplica as regras (quantidade `> 0`, preço `>= 0`, coluna extra) e expõe `converter_linha` para testar linha a linha sem arquivo. `cli` reaproveita `normalizar_data` em `--start`/`--end`.
