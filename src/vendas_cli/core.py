@@ -52,10 +52,12 @@ class ClassificacaoXYZ(NamedTuple):
 
 @dataclass
 class _Acumulado:
+    """Totais de um produto; nasce com o preço da primeira venda como mínimo e máximo."""
+
+    preco_min: Decimal
+    preco_max: Decimal
     quantidade: int = 0
     valor: Decimal = _ZERO
-    preco_min: Decimal | None = None
-    preco_max: Decimal | None = None
 
 
 def filtrar_por_periodo(
@@ -202,16 +204,15 @@ def gerar_relatorio(
     if meses and len(meses) < MESES_MINIMOS_XYZ:
         logger.info("período curto para XYZ: %d mês(es), mínimo %d", len(meses), MESES_MINIMOS_XYZ)
 
-    acumulados: dict[str, _Acumulado] = defaultdict(_Acumulado)
+    acumulados: dict[str, _Acumulado] = {}
     quantidade_mes: dict[str, dict[str, int]] = defaultdict(lambda: dict.fromkeys(nomes_meses, 0))
     for venda in no_periodo:
-        acumulado = acumulados[venda.produto]
+        preco = venda.preco_unitario
+        acumulado = acumulados.setdefault(venda.produto, _Acumulado(preco, preco))
         acumulado.quantidade += venda.quantidade
         acumulado.valor += venda.valor
-        if acumulado.preco_min is None or venda.preco_unitario < acumulado.preco_min:
-            acumulado.preco_min = venda.preco_unitario
-        if acumulado.preco_max is None or venda.preco_unitario > acumulado.preco_max:
-            acumulado.preco_max = venda.preco_unitario
+        acumulado.preco_min = min(acumulado.preco_min, preco)
+        acumulado.preco_max = max(acumulado.preco_max, preco)
         quantidade_mes[venda.produto][chave_mes(venda.data)] += venda.quantidade
 
     abc = classificar_abc({nome: acumulado.valor for nome, acumulado in acumulados.items()})
@@ -219,8 +220,6 @@ def gerar_relatorio(
     produtos: list[ResumoProduto] = []
     for nome, classificacao in abc.items():
         acumulado = acumulados[nome]
-        # preco_min/max são preenchidos na primeira venda do produto
-        assert acumulado.preco_min is not None and acumulado.preco_max is not None
         xyz = classificar_xyz(list(quantidade_mes[nome].values()))
         produtos.append(
             ResumoProduto(

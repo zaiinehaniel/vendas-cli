@@ -232,12 +232,11 @@ def formatar_texto(relatorio: Relatorio) -> str:
         "",
     ]
 
-    if not relatorio.produtos:
+    # Só não há mais vendido quando não há venda no período.
+    mais_vendido = relatorio.mais_vendido
+    if mais_vendido is None:
         linhas.append("Nenhuma venda no período.")
         return "\n".join(linhas)
-
-    mais_vendido = relatorio.mais_vendido
-    assert mais_vendido is not None  # há produtos, então há mais vendido
 
     linhas += ["Produtos (curva ABC)", *_tabela_produtos(relatorio), ""]
     linhas += [
