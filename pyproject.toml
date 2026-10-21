@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "vendas-cli"
 dynamic = ["version"]
 description = "Relatório de vendas a partir de CSV: totais, curva ABC, XYZ e vendas por mês."
+readme = "README.md"
 requires-python = ">=3.10"
 dependencies = []
 
