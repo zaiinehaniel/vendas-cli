@@ -317,7 +317,7 @@ Regras de desenho:
 
 ## 7. Ferramentas de dev (extras `[dev]`)
 
-`pytest`, `pytest-cov`, `mypy`, `ruff`. Opcional: GitHub Actions rodando `ruff`, `mypy` e `pytest` em 3.10–3.12.
+`pytest`, `pytest-cov`, `mypy`, `ruff` (versões de `mypy` e `ruff` fixadas na faixa menor, para o CI não quebrar com regras novas). GitHub Actions (`.github/workflows/ci.yml`) roda `ruff`, `mypy` e `pytest` em Python 3.10–3.13 a cada push na `main` e em pull requests.
 
 ## 8. README
 

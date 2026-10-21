@@ -1,5 +1,7 @@
 # vendas-cli
 
+[![CI](https://github.com/zaiinehaniel/vendas-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/zaiinehaniel/vendas-cli/actions/workflows/ci.yml)
+
 CLI em Python que lê um CSV de vendas e gera um relatório em texto, JSON ou HTML.
 
 Além do que o desafio pede (total por produto, valor geral e produto mais vendido), o relatório traz análises usadas em gestão de vendas e estoque:
@@ -10,7 +12,7 @@ Além do que o desafio pede (total por produto, valor geral e produto mais vendi
 - **Preço praticado**: preço médio ponderado, mínimo e máximo por produto.
 - **Sazonalidade**: vendas mês a mês, variação sobre o mês anterior e mês de pico de cada produto.
 
-Só usa a biblioteca padrão, sem dependências de runtime. Requer Python 3.10 ou superior.
+Só usa a biblioteca padrão, sem dependências de runtime. Requer Python 3.10 ou superior; o CI testa do 3.10 ao 3.13.
 
 ## Instalação
 
