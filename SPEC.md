@@ -121,6 +121,8 @@ vendas-cli ARQUIVO [--format {text,json,html}] [-o SAIDA] [--start AAAA-MM-DD] [
 | `--version` | | Mostra a versão |
 
 - Relatório vai para **stdout** (ou `-o`); logs vão para **stderr** (o JSON fica limpo para `| jq`).
+- Tudo em português: ajuda (`uso:`, grupos de opções, exemplos e códigos de saída no `--help`), erros do argparse (traduzidos em `cli`) e níveis de log (`DEPURAÇÃO`, `INFO`, `AVISO`, `ERRO`), no formato `NIVEL: mensagem`.
+- Nomes das opções seguem o enunciado (`--format`, `--start`, `--end`); valores de `--format` também (`text`, `json`, `html`).
 - Data inválida ou `--start > --end`: erro do argparse (exit 2).
 - Falha ao escrever em `-o` (diretório inexistente, sem permissão): log `ERROR`, exit 1.
 
@@ -311,7 +313,7 @@ Regras de desenho:
   - **formatacao**: milhar e decimal pt-BR; `ROUND_HALF_UP` (`-47,025` → `-47,03`); sem `-0,00`; período com e sem limites; plural.
   - **output**: text e JSON do exemplo batem com a seção 4; JSON válido e com o schema acima; `null` vira `-` no text; caso vazio.
   - **relatorio_html**: parseia sem erro com `html.parser.HTMLParser`; contém totais, classes e meses do exemplo; produto `<script>` sai escapado; sem `http://`/`https://`/`<script` no documento; caso vazio mostra a mensagem.
-  - **cli**: `main([...])` retorna 0/1; `--start > --end` gera exit 2; `-o` grava o arquivo em UTF-8; `-o` em diretório inexistente gera exit 1; JSON em stdout e logs em stderr (`capsys`).
+  - **cli**: ajuda e mensagens de erro em português; `--version`; `python -m vendas_cli`; logs não duplicam ao chamar `main` duas vezes; `-q` oculta avisos e `-v` mostra `INFO`/`DEPURAÇÃO`; `main([...])` retorna 0/1; `--start > --end` gera exit 2; `-o` grava o arquivo em UTF-8; `-o` em diretório inexistente gera exit 1; JSON em stdout e logs em stderr (`capsys`).
 
 ## 7. Ferramentas de dev (extras `[dev]`)
 
