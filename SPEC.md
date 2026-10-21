@@ -335,10 +335,10 @@ Gráficos (próximo passo natural: SVG inline no HTML, ainda sem dependência), 
 
 ## 10. Pronto quando
 
-- [ ] `pip install .` e `vendas-cli exemplos/vendas.csv` funcionam num venv limpo.
-- [ ] Os 3 comandos do enunciado rodam sem erro.
-- [ ] `vendas-cli exemplos/vendas.csv --format html -o relatorio.html` gera um arquivo que abre offline e imprime legível.
-- [ ] Saídas text e json do exemplo batem com a seção 4.
-- [ ] `pytest` passa com cobertura >= 80%.
-- [ ] `mypy --strict src` e `ruff check` limpos.
-- [ ] README completo, repo público no GitHub.
+- [x] `pip install .` e `vendas-cli exemplos/vendas.csv` funcionam num venv limpo.
+- [x] Os 3 comandos do enunciado rodam sem erro.
+- [x] `vendas-cli exemplos/vendas.csv --format html -o relatorio.html` gera um arquivo que abre offline e imprime legível.
+- [x] Saídas text e json do exemplo batem com a seção 4.
+- [x] `pytest` passa com cobertura >= 80%.
+- [x] `mypy --strict src` e `ruff check` limpos.
+- [x] README completo, repo público no GitHub.
