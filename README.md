@@ -15,7 +15,7 @@ Só usa a biblioteca padrão, sem dependências de runtime. Requer Python 3.10 o
 ## Instalação
 
 ```bash
-git clone <url-do-repositório>
+git clone https://github.com/zaiinehaniel/vendas-cli.git
 cd vendas-cli
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
