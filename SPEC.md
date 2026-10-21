@@ -240,6 +240,8 @@ Conteúdo, na ordem:
 7. Rodapé: legenda curta das classes (A/B/C e X/Y/Z) e versão do `vendas-cli`.
 
 - Números no padrão pt-BR, iguais ao text; `null` aparece como `–`.
+- Tabelas largas rolam na horizontal dentro da própria seção em telas estreitas; cards empilham.
+- Período com menos de 3 meses: nota "XYZ não calculado" abaixo da tabela de demanda.
 - `<html lang="pt-BR">`, `<meta charset="utf-8">`, colunas numéricas alinhadas à direita.
 - `@media print`: sem sombras/fundos pesados, tabelas sem quebra no meio da linha.
 - Sem vendas: cabeçalho, cards zerados e a mensagem "Nenhuma venda no período"; tabelas omitidas.
@@ -261,7 +263,8 @@ vendas-cli/
 │   ├── normalizer.py       # texto -> date | int | Decimal (data, quantidade, preço pt-BR)
 │   ├── parser.py           # CSV -> list[Venda] + contagem de ignorados; regras de linha válida
 │   ├── core.py             # filtro, agregações, ABC, XYZ, preço, pico, vendas por mês -> Relatorio
-│   ├── output.py           # Relatorio -> str (text | json), despacha html; formatação pt-BR compartilhada
+│   ├── formatacao.py       # números, período e plural em pt-BR (comum a text e html)
+│   ├── output.py           # Relatorio -> str (text | json), despacha html
 │   ├── relatorio_html.py   # Relatorio -> str (html); nome evita confusão com o módulo html da stdlib
 │   └── cli.py              # argparse, logging, orquestração, escrita da saída, exit codes
 └── tests/
@@ -269,6 +272,7 @@ vendas-cli/
     ├── test_normalizer.py
     ├── test_parser.py
     ├── test_core.py
+    ├── test_formatacao.py
     ├── test_output.py
     ├── test_relatorio_html.py
     └── test_cli.py
@@ -287,7 +291,7 @@ Regras de desenho:
 - `normalizer` converte texto em tipo e levanta `ValueError` com mensagem pronta para log; não conhece CSV nem regra de negócio. `parser` aplica as regras (quantidade `> 0`, preço `>= 0`, coluna extra) e expõe `converter_linha` para testar linha a linha sem arquivo. `cli` reaproveita `normalizar_data` em `--start`/`--end`.
 - `core`, `output` e `relatorio_html` são funções puras (sem I/O); a data de geração do HTML entra como parâmetro (testável). Quem escreve é o `cli`.
 - `core` expõe as peças separadas para testar isoladamente: `filtrar_por_periodo`, `agregar_por_mes`, `classificar_abc` (valores por produto), `classificar_xyz` (uma série mensal), `mes_de_pico`, `resumir_abc`, `montar_matriz`, `escolher_mais_vendido`. `gerar_relatorio(vendas, inicio=, fim=, ignorados=)` aplica o filtro e junta tudo. Meses são calculados primeiro porque o XYZ depende deles.
-- Formatação de número pt-BR fica num lugar só (`output`) e é reaproveitada pelo HTML.
+- Formatação pt-BR fica em `formatacao`, usada por `output` e `relatorio_html` (evita import circular, já que `output` despacha para o HTML).
 - Só `cli` conhece `argparse`, `sys.exit` e configura o `logging`. Os outros módulos usam `logging.getLogger(__name__)`.
 - Erros fatais do parser sobem como exceção própria (`ErroLeituraCSV`); `cli` captura e converte em exit 1.
 - Dataclasses `frozen=True`, tipos completos, `mypy --strict` passando.
@@ -304,6 +308,7 @@ Regras de desenho:
   - **core / XYZ**: classes do exemplo (X, Y, Z); limites exatos 0,5 e 1,0; produto que não vendeu em alguns meses conta zero; menos de 3 meses dá `null` e loga `INFO`; matriz do exemplo e matriz zerada.
   - **core / preço e pico**: preço médio ponderado; min/max; produto com um único preço; pico com empate fica no mês mais antigo.
   - **core / mês**: agrupamento; mês sem venda no meio vira zero; variação positiva e negativa; `null` no primeiro mês e após mês zerado; ordem cronológica.
+  - **formatacao**: milhar e decimal pt-BR; `ROUND_HALF_UP` (`-47,025` → `-47,03`); sem `-0,00`; período com e sem limites; plural.
   - **output**: text e JSON do exemplo batem com a seção 4; JSON válido e com o schema acima; `null` vira `-` no text; caso vazio.
   - **relatorio_html**: parseia sem erro com `html.parser.HTMLParser`; contém totais, classes e meses do exemplo; produto `<script>` sai escapado; sem `http://`/`https://`/`<script` no documento; caso vazio mostra a mensagem.
   - **cli**: `main([...])` retorna 0/1; `--start > --end` gera exit 2; `-o` grava o arquivo em UTF-8; `-o` em diretório inexistente gera exit 1; JSON em stdout e logs em stderr (`capsys`).

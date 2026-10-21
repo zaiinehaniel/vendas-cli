@@ -1,6 +1,5 @@
-"""Formatação do relatório em texto (tabelas) e JSON.
+"""Formatação do relatório em texto (tabelas) e JSON; despacha o HTML.
 
-Também concentra a formatação de números pt-BR, reaproveitada pelo HTML.
 Funções puras: recebem ``Relatorio`` e devolvem ``str``.
 """
 
@@ -8,51 +7,36 @@ from __future__ import annotations
 
 import json
 from collections.abc import Sequence
-from datetime import date
-from decimal import ROUND_HALF_UP, Decimal
+from datetime import datetime
+from decimal import Decimal
 from typing import Any, Literal
 
 from vendas_cli.core import CLASSES_XYZ
+from vendas_cli.formatacao import (
+    arredondar,
+    formatar_decimal,
+    formatar_inteiro,
+    formatar_periodo,
+    plural,
+)
 from vendas_cli.models import Relatorio, ResumoProduto
+from vendas_cli.relatorio_html import gerar_html
 
-Formato = Literal["text", "json"]
-FORMATOS: tuple[Formato, ...] = ("text", "json")
+Formato = Literal["text", "json", "html"]
+FORMATOS: tuple[Formato, ...] = ("text", "json", "html")
 
 VAZIO = "-"
 
-_CENTAVOS = Decimal("0.01")
 
+def formatar(relatorio: Relatorio, formato: Formato, gerado_em: datetime | None = None) -> str:
+    """Formata o relatório no formato pedido.
 
-def arredondar(valor: Decimal) -> Decimal:
-    """Duas casas, ``ROUND_HALF_UP``, sem ``-0.00``."""
-    arredondado = valor.quantize(_CENTAVOS, rounding=ROUND_HALF_UP)
-    return abs(arredondado) if arredondado.is_zero() else arredondado
-
-
-def formatar_decimal(valor: Decimal) -> str:
-    """``Decimal`` em pt-BR: ``20750.5`` → ``20.750,50``."""
-    return f"{arredondar(valor):,.2f}".translate(str.maketrans(",.", ".,"))
-
-
-def formatar_inteiro(valor: int) -> str:
-    """Inteiro em pt-BR: ``1234`` → ``1.234``."""
-    return f"{valor:,}".replace(",", ".")
-
-
-def formatar_periodo(inicio: date | None, fim: date | None) -> str:
-    texto_inicio = inicio.isoformat() if inicio else "início"
-    texto_fim = fim.isoformat() if fim else "fim"
-    return f"{texto_inicio} a {texto_fim}"
-
-
-def plural(quantidade: int, singular: str, plural: str) -> str:
-    return f"{formatar_inteiro(quantidade)} {singular if quantidade == 1 else plural}"
-
-
-def formatar(relatorio: Relatorio, formato: Formato) -> str:
-    """Formata o relatório no formato pedido."""
+    ``gerado_em`` só é usado no HTML; sem ele, vale o horário atual.
+    """
     if formato == "json":
         return formatar_json(relatorio)
+    if formato == "html":
+        return gerar_html(relatorio, gerado_em or datetime.now())
     return formatar_texto(relatorio)
 
 
